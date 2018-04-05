@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Storytelling PRO4</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+
+<style>
+#map {
+    position: fixed;
+    width:50%;
+}
+#features {
+    width: 50%;
+    margin-left: 50%;
+    font-family: sans-serif;
+    overflow-y: scroll;
+    background-color: #fafafa;
+}
+section {
+    padding:  25px 50px;
+    line-height: 25px;
+    border-bottom: 1px solid #ddd;
+    opacity: 0.25;
+    font-size: 13px;
+}
+section.active {
+    opacity: 1;
+}
+section:last-child {
+    border-bottom: none;
+    margin-bottom: 200px;
+}
+</style>
+
+<div id='map'></div>
+<div id='features'>
+    <section id='aldgate' class='active'>
+        <h3>Beyond the Wall</h3>
+        <p>Den syvende sæson af Game of Thrones viser John Snow med sine modige følgere kæmpe sig vej gennem snestorte og Hvide Vandre på den anden side af Muren. Dette sted er let at besøge for interesserede, for det befinder sig nemlig på Island. 
+        Stedet er en favoriseret lokalitet for serien da vinteren på Island selvfølgelig, er her.</p>
+    </section>
+    <section id='london-bridge'>
+        <h3>Dragonstone</h3>
+        <p>I den syvende sæson af serien vender Daenerys Targaryen tilbage til kysten af Westeros - Dargonstone, der er et meget iøjenfaldende sted. Den stenrige strand der bliver fundamentet for hendes fort ved bredden findes ved Itzurun, der ligger ved siden af den spanske badeby Zumaia, ved provinsen Guipúzcoa. </p>
+    </section>
+    <section id='woolwich'>
+        <h3>Highgarden</h3>
+        <p>I løbet af sæsonen bliver seeren introduceret til Highgarden, hvor House Tyrell har deres rødder. Slottet er det turistaktraktive Castillo de Almodóvar del Río i den andalusiske provins Córdoba. Her kan besøgende udforske og holde øje med Dothraki horderne mod horisonten, eller opleve diverse våbensamlinger.</p>
+    </section>
+    <section id="gloucester">
+        <h3>Mødet</h3>
+        <p>I løbet af sæsonfinalen blev Cersei mødt af en hvid vandre der blev frigivet. Dette fandt sted i et stort amfiteater, ved ruinerne af Italica, der er en gammel romersk by og fødested for kejserne Trajanus og Hadrian, der ligger lige udenfor Sevilla.</p>
+    </section>
+</div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicjB5YWwiLCJhIjoiY2pmamRhYTB4NGV4YTMzbnZ1Ym8xYXluNCJ9.JrUgyv0mczpQnjqGlxsvFw';
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/r0yal/cjfmovmvl161v2slm2nnquahv',
+    center: [-19.00583331,63.41833166],
+    zoom: 15.5,
+    bearing: 27,
+    pitch: 45
+});
+
+var chapters = {
+    'aldgate': {
+        duration: 6000,
+        center: [-19.00583331,63.41833166],
+        bearing: 150,
+        zoom: 15,
+        pitch: 0
+    },
+    'london-bridge': {
+        bearing: 90,
+        center: [-2.25721,43.30007],
+        zoom: 13,
+        speed: 0.6,
+        pitch: 40
+    },
+    'woolwich': {
+        bearing: 90,
+        center: [-64.18878,-31.42008],
+        zoom: 12.3
+    },
+   'gloucester': {
+        bearing: 45,
+        center: [-5.98446,37.38909],
+        zoom: 15.3,
+        pitch: 20,
+        speed: 0.5
+}
+};
+
+// On every scroll event, check which element is on screen
+window.onscroll = function() {
+    var chapterNames = Object.keys(chapters);
+    for (var i = 0; i < chapterNames.length; i++) {
+        var chapterName = chapterNames[i];
+        if (isElementOnScreen(chapterName)) {
+            setActiveChapter(chapterName);
+            break;
+        }
+    }
+};
+
+var activeChapterName = 'baker';
+function setActiveChapter(chapterName) {
+    if (chapterName === activeChapterName) return;
+
+    map.flyTo(chapters[chapterName]);
+
+    document.getElementById(chapterName).setAttribute('class', 'active');
+    document.getElementById(activeChapterName).setAttribute('class', '');
+
+    activeChapterName = chapterName;
+}
+
+function isElementOnScreen(id) {
+    var element = document.getElementById(id);
+    var bounds = element.getBoundingClientRect();
+    return bounds.top < window.innerHeight && bounds.bottom > 0;
+}
+
+</script>
+
+</body>
+</html>
